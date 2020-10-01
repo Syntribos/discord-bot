@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DiscordBot.Contracts
+namespace DiscordBot.Utilities
 {
     public static class Contract
     {

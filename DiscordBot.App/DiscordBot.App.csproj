@@ -165,28 +165,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bot.cs" />
-    <Compile Include="CommandHandler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="config.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Commands\DiscordBot.Commands.csproj">
+    <ProjectReference Include="..\DiscordBot.Commands\DiscordBot.Commands.csproj">
       <Project>{2b0b5d94-7b4d-46dc-bb23-f3c95dc320a3}</Project>
       <Name>DiscordBot.Commands</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Config\DiscordBot.Config.csproj">
+    <ProjectReference Include="..\DiscordBot.Config\DiscordBot.Config.csproj">
       <Project>{64a1df84-f124-4b8e-9bc5-06cc8539b49d}</Project>
       <Name>DiscordBot.Config</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Data\DiscordBot.Data.csproj">
-      <Project>{35FDFC5B-5AA9-4908-A590-9255C75CFEB3}</Project>
+    <ProjectReference Include="..\DiscordBot.Data\DiscordBot.Data.csproj">
+      <Project>{35fdfc5b-5aa9-4908-a590-9255c75cfeb3}</Project>
       <Name>DiscordBot.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\DiscordBot.Twitch\DiscordBot.Twitch.csproj">
@@ -194,7 +190,7 @@
       <Name>DiscordBot.Twitch</Name>
     </ProjectReference>
     <ProjectReference Include="..\DiscordBot.Utilities\DiscordBot.Utilities.csproj">
-      <Project>{F3885BF6-F78B-4E86-8BFD-F1B86483B723}</Project>
+      <Project>{f3885bf6-f78b-4e86-8bfd-f1b86483b723}</Project>
       <Name>DiscordBot.Utilities</Name>
     </ProjectReference>
   </ItemGroup>

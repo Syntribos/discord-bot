@@ -94,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AudioService.cs" />
+    <Compile Include="Contract.cs" />
     <Compile Include="TempDirectory.cs" />
     <Compile Include="IAudioService.cs" />
     <Compile Include="IVideoToAudioConverter.cs" />

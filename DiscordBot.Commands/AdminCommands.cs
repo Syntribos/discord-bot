@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using DiscordBot.Data;
@@ -7,7 +6,6 @@ using DiscordBot.Localization;
 using DiscordBot.Config;
 
 using Discord.Commands;
-using Discord.WebSocket;
 
 namespace DiscordBot.Commands
 {

@@ -1,13 +1,13 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-using DiscordBot.Contracts;
 using DiscordBot.Data;
-
-using System.Text.RegularExpressions;
 using DiscordBot.Localization;
-using Discord.Commands;
 using DiscordBot.Twitch;
+using DiscordBot.Utilities;
+
+using Discord.Commands;
 
 namespace DiscordBot.Commands
 {

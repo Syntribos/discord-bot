@@ -45,17 +45,17 @@
     <Compile Include="TwitchClient.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Contracts\DiscordBot.Contracts.csproj">
-      <Project>{53320ECB-908F-4D4B-89B5-82D87FC9C425}</Project>
-      <Name>DiscordBot.Contracts</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DataModels\DiscordBot.DataModels.csproj">
-      <Project>{4F0B4F92-C534-4576-96B8-BBB54F12C72F}</Project>
+    <ProjectReference Include="..\DiscordBot.DataModels\DiscordBot.DataModels.csproj">
+      <Project>{4f0b4f92-c534-4576-96b8-bbb54f12c72f}</Project>
       <Name>DiscordBot.DataModels</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Data\DiscordBot.Data.csproj">
+    <ProjectReference Include="..\DiscordBot.Data\DiscordBot.Data.csproj">
       <Project>{35FDFC5B-5AA9-4908-A590-9255C75CFEB3}</Project>
       <Name>DiscordBot.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DiscordBot.Utilities\DiscordBot.Utilities.csproj">
+      <Project>{F3885BF6-F78B-4E86-8BFD-F1B86483B723}</Project>
+      <Name>DiscordBot.Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

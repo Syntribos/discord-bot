@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using DiscordBot.Contracts;
+using DiscordBot.Utilities;
 using DiscordBot.Data;
 using DiscordBot.DataModels.Events;
 using DiscordBot.DataModels.Twitch;

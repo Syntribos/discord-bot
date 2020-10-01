@@ -70,7 +70,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DataModels\DiscordBot.DataModels.csproj">
+    <ProjectReference Include="..\DiscordBot.DataModels\DiscordBot.DataModels.csproj">
       <Project>{4F0B4F92-C534-4576-96B8-BBB54F12C72F}</Project>
       <Name>DiscordBot.DataModels</Name>
     </ProjectReference>

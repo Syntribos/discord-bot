@@ -2,14 +2,9 @@
 using System.Threading;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Diagnostics;
 
-using DiscordBot.Contracts;
 using DiscordBot.Utilities;
 
-using YouTubeSearch;
-using System.Net;
-using Discord.WebSocket;
 using Discord.Commands;
 using Discord;
 

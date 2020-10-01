@@ -78,7 +78,7 @@ namespace DiscordBot.App
 
             };
             var commandsService = new CommandService(commandsServiceConfig);
-            Commands = new CommandHandler(Client, commandsService, serviceCollection.BuildServiceProvider(), _botConfig);
+            Commands = new CommandHandler(Client, commandsService, serviceCollection.BuildServiceProvider(), null, _botConfig);
 
             await Commands.InstallCommandsAsync();
         }
