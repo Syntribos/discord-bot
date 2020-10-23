@@ -71,14 +71,17 @@ namespace DiscordBot.App
             serviceCollection.AddScoped<IAudioService, AudioService>();
             serviceCollection.AddScoped<IYoutubeService, YoutubeService>();
             serviceCollection.AddScoped<IVideoToAudioConverter, VideoToAudioConverter>();
+            serviceCollection.AddScoped<ICustomCommandHandler, CustomCommands>();
 
             var commandsServiceConfig = new CommandServiceConfig
             {
                 CaseSensitiveCommands = false,
 
             };
+
+            var cch = new CustomCommands(_commandsRepository);
             var commandsService = new CommandService(commandsServiceConfig);
-            Commands = new CommandHandler(Client, commandsService, serviceCollection.BuildServiceProvider(), null, _botConfig);
+            Commands = new CommandHandler(Client, commandsService, serviceCollection.BuildServiceProvider(), cch, _botConfig);
 
             await Commands.InstallCommandsAsync();
         }

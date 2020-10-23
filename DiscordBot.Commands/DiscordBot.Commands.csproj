@@ -155,7 +155,7 @@
     <Compile Include="AdminCommands.cs" />
     <Compile Include="CommandHandler.cs" />
     <Compile Include="CustomCommands.cs" />
-    <Compile Include="ICommandHandler.cs" />
+    <Compile Include="ICustomCommandHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TwitchCommands.cs" />
     <Compile Include="YoutubeCommands.cs" />

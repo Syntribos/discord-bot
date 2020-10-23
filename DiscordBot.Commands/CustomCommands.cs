@@ -29,27 +29,35 @@ namespace DiscordBot.Commands
             Initialize();
         }
 
-        public async Task<bool> HandleCommand(SocketUserMessage commandMessage, SocketCommandContext context)
+        public async Task<bool> HandleCommand(SocketUserMessage commandMessage, SocketCommandContext context, int commandStart)
         {
-            if (commandMessage.Author != Context.Client.CurrentUser)
+            if (commandMessage.Author != context.Client.CurrentUser)
             {
-                if (_commandResponse.TryGetValue(commandMessage.Content, out string response))
+                if (_commandResponse.TryGetValue(commandMessage.Content.Substring(commandStart), out string response))
                 {
                     await commandMessage.Channel.SendMessageAsync(response);
+                    return true;
                 }
             }
-            throw new NotImplementedException();
+
+            return false;
         }
 
-        private async Task HandleCustomcommand(SocketMessage message)
+        public bool AddCommand(string command, string response)
         {
-            if (message.Author != Context.Client.CurrentUser)
+            _commandResponse[command] = response;
+
+            if (_commandResponse[command] == response)
             {
-                if (_commandResponse.TryGetValue(message.Content, out string response))
-                {
-                    await message.Channel.SendMessageAsync(response);
-                }
+                return true;
             }
+
+            return false;
+        }
+
+        public bool RemoveCommand(string command)
+        {
+            return _commandResponse.Remove(command);
         }
 
         [Command("NewCommand"), Alias("nc", "addcommand", "ac"), RequireUserPermission(GuildPermission.ManageMessages)]

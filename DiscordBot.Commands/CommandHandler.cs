@@ -58,7 +58,7 @@ namespace DiscordBot.Commands
 
             var context = new SocketCommandContext(_discordSocketClient, message);
 
-            if (!await _customCommandHandler.HandleCommand(message, context))
+            if (!await _customCommandHandler.HandleCommand(message, context, argPos))
             {
                 var result = await _commandService.ExecuteAsync(context, argPos, _services);
             }

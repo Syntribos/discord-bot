@@ -14,7 +14,7 @@ namespace DiscordBot.App
         public async Task MainAsync()
         {
             var cancellationTokenSource = new CancellationTokenSource();
-            var botConfigFactory = new BotConfigFactory("config.json");
+            var botConfigFactory = new BotConfigFactory(@"C:\databases\config.json");
             var bot = new Bot(botConfigFactory, cancellationTokenSource.Token);
 
             await bot.Initialize();
