@@ -1,5 +1,6 @@
 ﻿using Discord.Commands;
 using Discord.WebSocket;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace DiscordBot.Commands
@@ -11,5 +12,13 @@ namespace DiscordBot.Commands
         bool AddCommand(string command, string response);
 
         bool RemoveCommand(string command);
+
+        bool HasCommand(string command);
+
+        bool IsReserved(string command);
+
+        string GetResponse(string command);
+
+        List<string> GetAllCustomCommands();
     }
 }

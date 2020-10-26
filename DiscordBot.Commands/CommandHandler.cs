@@ -32,11 +32,6 @@ namespace DiscordBot.Commands
             _discordSocketClient.MessageReceived += HandleCommandAsync;
 
             await _commandService.AddModulesAsync(Assembly.Load("DiscordBot.Commands"), _services);
-            /*_commandService.AddModuleAsync<TwitchCommands>(serviceProvider);
-            _commandService.RegisterCommands<TwitchCommands>();
-            _commandService.RegisterCommands<AdminCommands>();
-            _commandService.RegisterCommands<CustomCommands>();
-            _commandService.RegisterCommands<YoutubeCommands>();*/
         }
 
         public async Task HandleCommandAsync(SocketMessage msg)
@@ -62,8 +57,6 @@ namespace DiscordBot.Commands
             {
                 var result = await _commandService.ExecuteAsync(context, argPos, _services);
             }
-
-            Console.WriteLine("asd");
         }
     }
 }

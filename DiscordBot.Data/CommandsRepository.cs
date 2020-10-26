@@ -16,7 +16,7 @@ namespace DiscordBot.Data
 
         public Dictionary<string, string> GetAllCustomCommands()
         {
-            var customCommands = new Dictionary<string, string>();
+            var customCommands = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
             try
             {

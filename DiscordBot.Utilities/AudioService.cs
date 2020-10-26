@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -53,8 +54,15 @@ namespace DiscordBot.Utilities
             using (var stream = client.CreatePCMStream(AudioApplication.Music))
             using (var bws = new BufferedWriteStream(stream, client, 500, token))
             {
-                try { await ffmpeg.StandardOutput.BaseStream.CopyToAsync(bws); }
-                catch { await stream.FlushAsync(); }
+                try
+                {
+                    var output = ffmpeg.StandardOutput.BaseStream;
+                    await ffmpeg.StandardOutput.BaseStream.CopyToAsync(stream);
+                }
+                catch (Exception e)
+                {
+                    await stream.FlushAsync();
+                }
             }
         }
 

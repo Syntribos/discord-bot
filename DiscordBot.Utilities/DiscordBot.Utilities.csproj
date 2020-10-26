@@ -88,8 +88,8 @@
     <Reference Include="taglib-sharp, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\taglib-sharp-netstandard2.0.2.1.0\lib\netstandard2.0\taglib-sharp.dll</HintPath>
     </Reference>
-    <Reference Include="YouTubeSearch, Version=2.2.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\YouTubeSearch.2.2.3\lib\netstandard2.0\YouTubeSearch.dll</HintPath>
+    <Reference Include="YouTubeSearch, Version=2.2.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\YouTubeSearch.2.2.5\lib\netstandard2.0\YouTubeSearch.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
