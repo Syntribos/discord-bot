@@ -14,7 +14,6 @@ using System.IO;
 
 namespace DiscordBot.Commands
 {
-    [Group("Custom commands")]
     public class CustomCommandHandler : ICustomCommandHandler
     {
         private readonly CommandsRepository _commandsRepository;
@@ -42,21 +41,22 @@ namespace DiscordBot.Commands
             return false;
         }
 
-        public bool AddCommand(string command, string response)
+        public string AddCommand(string command, string response)
         {
             if(_commandsRepository.AddNewCommand(command, response))
             {
+                _commandResponse[command] = response;
+
                 if (Uri.TryCreate(response, UriKind.Absolute, out Uri uriResult)
                     && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
                 {
                     response = $"<{response}>";
                 }
 
-                _commandResponse[command] = response;
-                return true;
+                return response;
             }
 
-            return false;
+            return null;
         }
 
         public bool HasCommand(string command)

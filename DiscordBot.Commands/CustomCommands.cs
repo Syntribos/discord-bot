@@ -1,21 +1,17 @@
 ﻿using Discord;
 using Discord.Commands;
 using DiscordBot.Localization;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DiscordBot.Commands
 {
-    class CustomCommands : ModuleBase<SocketCommandContext>
+    public class CustomCommands : ModuleBase<ICommandContext>
     {
         private readonly ICustomCommandHandler _customCommandHandler;
 
         public CustomCommands(ICustomCommandHandler customCommandHandler)
         {
-
+            _customCommandHandler = customCommandHandler;
         }
 
         [Command("NewCommand"), Alias("nc", "addcommand", "ac"), RequireUserPermission(GuildPermission.ManageMessages)]
@@ -37,7 +33,8 @@ namespace DiscordBot.Commands
                 return;
             }
 
-            if (_customCommandHandler.AddCommand(command, response))
+            response = _customCommandHandler.AddCommand(command, response);
+            if (response != null)
             {
                 await Context.Channel.SendMessageAsync($"Added new command {command} with response {_customCommandHandler.GetResponse(command)}");
             }

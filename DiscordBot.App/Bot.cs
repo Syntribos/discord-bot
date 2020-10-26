@@ -21,6 +21,7 @@ namespace DiscordBot.App
         private StreamerDataRepository _streamerDataRepository;
         private SettingsRepository _settingsRepository;
         private CommandsRepository _commandsRepository;
+        private ICustomCommandHandler _customCommandHandler;
         private bool _initialized;
 
         public DiscordSocketClient Client { get; private set; }
@@ -68,20 +69,19 @@ namespace DiscordBot.App
             serviceCollection.AddSingleton(_commandsRepository);
             serviceCollection.AddSingleton(_botConfig);
             serviceCollection.AddSingleton(_twitchClient);
+            serviceCollection.AddSingleton(_customCommandHandler);
             serviceCollection.AddScoped<IAudioService, AudioService>();
             serviceCollection.AddScoped<IYoutubeService, YoutubeService>();
             serviceCollection.AddScoped<IVideoToAudioConverter, VideoToAudioConverter>();
-            serviceCollection.AddScoped<ICustomCommandHandler, CustomCommandHandler>();
 
             var commandsServiceConfig = new CommandServiceConfig
             {
                 CaseSensitiveCommands = false,
-
             };
 
-            var cch = new CustomCommandHandler(_commandsRepository);
+            
             var commandsService = new CommandService(commandsServiceConfig);
-            Commands = new CommandHandler(Client, commandsService, serviceCollection.BuildServiceProvider(), cch, _botConfig);
+            Commands = new CommandHandler(Client, commandsService, serviceCollection.BuildServiceProvider(), _customCommandHandler, _botConfig);
 
             await Commands.InstallCommandsAsync();
         }
@@ -94,6 +94,7 @@ namespace DiscordBot.App
             _botConfig.Prefix = _settingsRepository.InitializeAndGetPrefix();
             _commandsRepository = new CommandsRepository(_botConfig.DatabaseLocation);
             _twitchClient = new TwitchClient(_token, _streamerDataRepository);
+            _customCommandHandler = new CustomCommandHandler(_commandsRepository);
         }
 
         private void CreateBackgroundTasks()

@@ -12,7 +12,6 @@ namespace DiscordBot.Commands
 {
     public class YoutubeCommands : ModuleBase<ICommandContext>
     {
-       
         private readonly IAudioService _audioService;
         private readonly IYoutubeService _youtubeService;
         private readonly IVideoToAudioConverter _videoToAudioConverter;

@@ -9,7 +9,7 @@ namespace DiscordBot.Commands
     {
         Task<bool> HandleCommand(SocketUserMessage commandMessage, SocketCommandContext context, int commandStart);
 
-        bool AddCommand(string command, string response);
+        string AddCommand(string command, string response);
 
         bool RemoveCommand(string command);
 
