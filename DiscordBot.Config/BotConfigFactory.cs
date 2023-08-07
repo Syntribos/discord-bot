@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Text;
+﻿using System.Text;
 
 using Newtonsoft.Json;
 
@@ -30,7 +28,8 @@ namespace DiscordBot.Config
                 throw new Exception("Failed to read config file.");
             }
 
-            return JsonConvert.DeserializeObject<BotConfig>(json);
+            var internalConfig = JsonConvert.DeserializeObject<InternalBotConfig>(json) ?? throw new ArgumentException($"Couldn't deserialize file {_configFile} properly. Check the format and try again.");
+            return new BotConfig(_configFile, internalConfig);
         }
     }
 }

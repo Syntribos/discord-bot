@@ -1,25 +1,33 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using Microsoft.Extensions.DependencyInjection;
+
 using DiscordBot.Config;
+using DiscordBot.Setup;
 
-namespace DiscordBot.App
+namespace DiscordBot.App;
+
+class Program
 {
-    class Program
+    private readonly BotConfigFactory _botConfigFactory;
+
+    public Program(string configFilePath)
     {
-        static void Main(string[] args)
-        {
-            new Program().MainAsync().GetAwaiter().GetResult();
-        }
+        _botConfigFactory = new BotConfigFactory(configFilePath);
+    }
 
-        public async Task MainAsync()
-        {
-            var cancellationTokenSource = new CancellationTokenSource();
-            var botConfigFactory = new BotConfigFactory(@"C:\databases\config.json");
-            var bot = new Bot(botConfigFactory, cancellationTokenSource.Token);
+    public static void Main(string[] _)
+    {
+        new Program(@"C:\databases\config.json").MainAsync().GetAwaiter().GetResult();
+    }
 
-            await bot.Initialize();
-            bot.RunAsync().GetAwaiter().GetResult();
-            cancellationTokenSource.Cancel();
-        }
+    private async Task MainAsync()
+    {
+        var botConfig = _botConfigFactory.Create();
+
+        using var bot = new Bot();
+
+        var serviceRegistrator = new ServiceRegistrator(new ServiceCollection(), botConfig);
+        await bot.Initialize(serviceRegistrator);
+        await bot.Run(botConfig);
+        await Task.Delay(Timeout.Infinite);
     }
 }

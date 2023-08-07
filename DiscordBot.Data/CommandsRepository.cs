@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DiscordBot.DataModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +9,8 @@ namespace DiscordBot.Data
 {
     public class CommandsRepository : DataRepository
     {
-        public CommandsRepository(string databasePath)
-            : base(databasePath)
+        public CommandsRepository(IDatabaseInfo databaseInfo)
+            : base(databaseInfo)
         {
             _initialized = true;
         }
@@ -35,7 +36,7 @@ namespace DiscordBot.Data
                     customCommands.Add(reader.GetString(0), reader.GetString(1));
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
             }
 

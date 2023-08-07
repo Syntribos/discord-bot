@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using DiscordBot.DataModels;
 using Microsoft.Data.Sqlite;
 
 namespace DiscordBot.Data
 {
     public class SettingsRepository : DataRepository
     {
-        public SettingsRepository(string databasePath)
-            : base(databasePath)
+        public SettingsRepository(IDatabaseInfo databaseInfo)
+            : base(databaseInfo)
         {
         }
 
@@ -44,7 +45,7 @@ namespace DiscordBot.Data
                 }
                 catch (SqliteException)
                 {
-                    throw new Exception($"FATAL: Could not connect to settings data repository. Ensure the database file exists at {_connectionString} and restart the bot.");
+                    throw new Exception($"FATAL: Could not connect to settings data repository. Ensure the database file exists at {_databaseInfo.DatabasePath} and restart the bot.");
                 }
 
                 var command = _connection.CreateCommand();

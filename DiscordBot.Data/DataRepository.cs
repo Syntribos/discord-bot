@@ -1,25 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using DiscordBot.DataModels;
 using Microsoft.Data.Sqlite;
 
 namespace DiscordBot.Data
 {
     public class DataRepository : IDisposable
     {
-        protected readonly string _connectionString;
+        protected readonly IDatabaseInfo _databaseInfo;
         protected readonly SqliteConnection _connection;
         protected bool _initialized;
 
-        public DataRepository(string databasePath)
+        public DataRepository(IDatabaseInfo databaseInfo)
         {
-            _connectionString = $"Data Source={databasePath};";
-            _connection = new SqliteConnection(_connectionString);
+            _databaseInfo = databaseInfo;
+            _connection = new SqliteConnection(_databaseInfo.ConnectionString);
             _initialized = false;
 
-            if (!File.Exists(databasePath))
+            if (!File.Exists(_databaseInfo.DatabasePath))
             {
-                CreateFile(databasePath);
+                CreateFile(_databaseInfo.DatabasePath);
                 InitializeDatabase();
             }
         }

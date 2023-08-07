@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using Microsoft.Data.Sqlite;
 
 using DiscordBot.DataModels.Twitch;
+using DiscordBot.DataModels;
 
 namespace DiscordBot.Data
 {
     public class StreamerDataRepository : DataRepository
     {
-        private StreamerFactory _streamerFactory;
+        private StreamerFactory? _streamerFactory;
 
-        public StreamerDataRepository(string databasePath)
-            : base(databasePath)
+        public StreamerDataRepository(IDatabaseInfo databaseInfo)
+            : base(databaseInfo)
         {
         }
 
@@ -157,7 +158,7 @@ namespace DiscordBot.Data
                 }
                 catch (SqliteException)
                 {
-                    throw new Exception($"FATAL: Could not connect to streamer data repository. Ensure the database file exists at {_connectionString} and restart the bot.");
+                    throw new Exception($"FATAL: Could not connect to streamer data repository. Ensure the database file exists at {_databaseInfo.DatabasePath} and restart the bot.");
                 }
 
                 var command = _connection.CreateCommand();

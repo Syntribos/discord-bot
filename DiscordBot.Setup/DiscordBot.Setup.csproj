@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Discord.Net.WebSocket" Version="3.11.0" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
+      <PackageReference Include="YoutubeDLSharp" Version="1.0.0" />
+      <PackageReference Include="YouTubeSearch" Version="2.2.6" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DiscordBot.Commands\DiscordBot.Commands.csproj" />
+      <ProjectReference Include="..\DiscordBot.Config\DiscordBot.Config.csproj" />
+      <ProjectReference Include="..\DiscordBot.Data\DiscordBot.Data.csproj" />
+      <ProjectReference Include="..\DiscordBot.Utilities\DiscordBot.Utilities.csproj" />
+    </ItemGroup>
+
+</Project>

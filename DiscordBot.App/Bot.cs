@@ -1,105 +1,118 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using Discord.Commands;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System.Data;
+
+using Discord;
 using Discord.WebSocket;
+
 using DiscordBot.Commands;
 using DiscordBot.Config;
-using DiscordBot.Data;
-using DiscordBot.Twitch;
-using DiscordBot.Utilities;
-using Microsoft.Extensions.DependencyInjection;
+using DiscordBot.Setup;
 
-namespace DiscordBot.App
+namespace DiscordBot.App;
+
+public enum BotState
 {
-    public class Bot
+    Uninitialized,
+    Initializing,
+    Initialized,
+    Running,
+    ShuttingDown,
+    ShutDown,
+}
+
+public class Bot : IBot
+{
+    private BotState _state;
+    private DiscordSocketClient? _client;
+    private CommandHandler? _commands;
+    private IServiceProvider? _serviceProvider;
+
+    public Bot()
     {
-        private readonly BotConfig _botConfig;
-        private readonly CancellationToken _token;
-        private TwitchClient _twitchClient;
-        private StreamerDataRepository _streamerDataRepository;
-        private SettingsRepository _settingsRepository;
-        private CommandsRepository _commandsRepository;
-        private ICustomCommandHandler _customCommandHandler;
-        private bool _initialized;
+        _state = BotState.Uninitialized;
+    }
 
-        public DiscordSocketClient Client { get; private set; }
-        public CommandHandler Commands { get; private set; }
+    public BotState State => _state;
 
-        public Bot(BotConfigFactory botConfigFactory, CancellationToken token)
+    public async Task Initialize(IServiceRegistrator serviceRegistrator)
+    {
+        if (_state != BotState.Uninitialized)
         {
-            _botConfig = botConfigFactory.Create();
-            _token = token;
-            _initialized = false;
+            throw new Exception($"{nameof(Bot)} cannot be initialized from state {_state}.");
         }
 
-        public async Task Initialize()
+        _state = BotState.Initializing;
+
+        serviceRegistrator.RegisterServices();
+        _serviceProvider = serviceRegistrator.BuildServices();
+        _client = _serviceProvider.GetRequiredService<DiscordSocketClient>();
+        SetupClientEvents();
+
+        _commands = _serviceProvider.GetRequiredService<CommandHandler>();
+        await _commands.InstallCommandsAsync();
+        await _commands.InstallInteractionsAsync();
+
+        _state = BotState.Initialized;
+    }
+
+    public async Task Run(BotConfig botConfig)
+    {
+        if (_state != BotState.Initialized || _client is null)
         {
-            await CreateClient();
-            SetupRepositories();
-            await CreateAndRegisterCommands();
-            CreateBackgroundTasks();
-            _initialized = true;
+            throw new Exception($"Client has not been initialized yet. Please call {nameof(Initialize)} before {nameof(Run)}.");
         }
 
-        public async Task RunAsync()
-        {
-            if (!_initialized)
-            {
-                throw new NotSupportedException("Bot must be initialized before starting!");
-            }
+        await _client.LoginAsync(TokenType.Bot, botConfig.Token);
+        await _client.StartAsync();
 
-            await Client.StartAsync();
-            await Task.Delay(-1);
+        _state = BotState.Running;
+    }
+
+    public async Task Shutdown()
+    {
+        if (_state != BotState.Running || _client is null)
+        {
+            throw new Exception($"Client cannot be shut down in this state.");
         }
 
-        private async Task CreateClient()
+        _state = BotState.ShuttingDown;
+        await _client.LogoutAsync();
+        await _client.StopAsync();
+        _state = BotState.ShutDown;
+    }
+
+    private void SetupClientEvents()
+    {
+        if (_client == null)
         {
-            Client = new DiscordSocketClient();
-            await Client.LoginAsync(Discord.TokenType.Bot, _botConfig.Token);
+            throw new NoNullAllowedException($"The ${nameof(DiscordSocketClient)} must be instantiated before setting up events.");
         }
 
-        private async Task CreateAndRegisterCommands()
-        {
-            var serviceCollection = new ServiceCollection();
+        _client.Log += LogAsync;
+    }
 
-            serviceCollection.AddSingleton(_streamerDataRepository);
-            serviceCollection.AddSingleton(_settingsRepository);
-            serviceCollection.AddSingleton(_commandsRepository);
-            serviceCollection.AddSingleton(_botConfig);
-            serviceCollection.AddSingleton(_twitchClient);
-            serviceCollection.AddSingleton(_customCommandHandler);
-            serviceCollection.AddScoped<IAudioService, AudioService>();
-            serviceCollection.AddScoped<IYoutubeService, YoutubeService>();
-            serviceCollection.AddScoped<IVideoToAudioConverter, VideoToAudioConverter>();
+    private Task LogAsync(LogMessage log)
+    {
+        Console.WriteLine(log);
+        return Task.CompletedTask;
+    }
 
-            var commandsServiceConfig = new CommandServiceConfig
-            {
-                CaseSensitiveCommands = false,
-            };
+    // The Ready event indicates that the client has opened a
+    // connection and it is now safe to access the cache.
+    private Task ReadyAsync()
+    {
+        Console.WriteLine($"{_client?.CurrentUser} is connected!");
 
-            
-            var commandsService = new CommandService(commandsServiceConfig);
-            Commands = new CommandHandler(Client, commandsService, serviceCollection.BuildServiceProvider(), _customCommandHandler, _botConfig);
+        return Task.CompletedTask;
+    }
 
-            await Commands.InstallCommandsAsync();
-        }
+    private void CreateBackgroundTasks()
+    {
+        // Task.Run(() => _twitchClient.CheckLiveTwitchChannels(TimeSpan.FromSeconds(15)));
+    }
 
-        private void SetupRepositories()
-        {
-            _streamerDataRepository = new StreamerDataRepository(_botConfig.DatabaseLocation);
-            _streamerDataRepository.Initialize();
-            _settingsRepository = new SettingsRepository(_botConfig.DatabaseLocation);
-            _botConfig.Prefix = _settingsRepository.InitializeAndGetPrefix();
-            _commandsRepository = new CommandsRepository(_botConfig.DatabaseLocation);
-            _twitchClient = new TwitchClient(_token, _streamerDataRepository);
-            _customCommandHandler = new CustomCommandHandler(_commandsRepository);
-        }
-
-        private void CreateBackgroundTasks()
-        {
-            Task.Run(() => _twitchClient.CheckLiveTwitchChannels(TimeSpan.FromSeconds(15)));
-        }
+    public async void Dispose()
+    {
+        await Shutdown();
     }
 }
