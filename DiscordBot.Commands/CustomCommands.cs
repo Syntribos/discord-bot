@@ -1,7 +1,6 @@
 ﻿using Discord;
 using Discord.Commands;
 using DiscordBot.Localization;
-using System.Threading.Tasks;
 
 namespace DiscordBot.Commands
 {
@@ -33,8 +32,7 @@ namespace DiscordBot.Commands
                 return;
             }
 
-            response = _customCommandHandler.AddCommand(command, response);
-            if (response != null)
+            if (_customCommandHandler.TryAddCommand(command, response))
             {
                 await Context.Channel.SendMessageAsync($"Added new command {command} with response {_customCommandHandler.GetResponse(command)}");
             }

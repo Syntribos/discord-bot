@@ -1,7 +1,6 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
-using Discord;
+﻿using Discord;
 using Discord.WebSocket;
+using Newtonsoft.Json;
 
 namespace DiscordBot.Config
 {

@@ -14,7 +14,8 @@ namespace DiscordBot.Services
 
         public string ConvertVideoToMp3(string videoPath)
         {
-            var baseFilePath = Path.GetDirectoryName(videoPath);
+            var baseFilePath = Path.GetDirectoryName(videoPath) ??
+                               throw new ArgumentException($"Couldn't get path from {videoPath}.");
             var videoName = Path.GetFileNameWithoutExtension(videoPath);
             var mp3FilePath = Path.Combine(baseFilePath, videoName + ".mp3");
 

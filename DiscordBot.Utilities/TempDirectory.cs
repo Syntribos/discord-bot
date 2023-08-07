@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DiscordBot.Utilities
+﻿namespace DiscordBot.Utilities
 {
     public class TempDirectory : IDisposable
     {
@@ -15,10 +8,18 @@ namespace DiscordBot.Utilities
             DirectoryPath = Path.Combine(Directory.GetCurrentDirectory(), tempFileName);
             Directory.CreateDirectory(DirectoryPath);
         }
+        
+        public TempDirectory(string baseDirectory)
+        {
+            var tempFileName = Path.GetRandomFileName();
+            DirectoryPath = Path.Combine(baseDirectory, tempFileName);
+            Directory.CreateDirectory(DirectoryPath);
+        }
 
         public void Dispose()
         {
             Directory.Delete(DirectoryPath, true);
+            GC.SuppressFinalize(this);
         }
 
         public string DirectoryPath { get; }

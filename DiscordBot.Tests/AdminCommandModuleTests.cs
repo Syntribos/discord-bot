@@ -21,6 +21,7 @@ public class AdminCommandModuleTests
     {
         const ulong targetId = 123;
         const ulong senderId = 666;
+        const PurgeDays daysToPurge = PurgeDays.Five;
 
         var dummyUser = new UserDummy(targetId, "non guild user");
         var dummyGuild = new GuildDummy();
@@ -45,7 +46,7 @@ public class AdminCommandModuleTests
 
         var module = new AdminCommandRunner();
 
-        await module.BanUser(mockContext.Object, dummyUser);
+        await module.BanUser(mockContext.Object, dummyUser, daysToPurge, "felt like it");
 
         Assert.NotNull(embeds);
         Assert.Single(embeds);
@@ -73,7 +74,6 @@ public class AdminCommandModuleTests
 
         var mockContext = _repo.Create<IInteractionContext>();
         var mockInteraction = _repo.Create<IDiscordInteraction>();
-        var mockClient = _repo.Create<IDiscordClient>();
 
         mockContext.SetupGet(x => x.Guild).Returns(dummyGuild);
         mockContext.SetupGet(x => x.Interaction).Returns(mockInteraction.Object);
@@ -83,7 +83,7 @@ public class AdminCommandModuleTests
 
         var module = new AdminCommandRunner();
 
-        await module.BanUser(mockContext.Object, dummyUser);
+        await module.BanUser(mockContext.Object, dummyUser, PurgeDays.None, "felt like it");
 
         Assert.Empty(dummyGuild.BannedUsers);
         Assert.Single(dummyGuild.GuildUsers.Where(x => x.Id.Equals(guildUserId)));

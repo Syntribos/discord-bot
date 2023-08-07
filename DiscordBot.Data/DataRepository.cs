@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using Microsoft.Data.Sqlite;
+
 using DiscordBot.DataModels;
-using Microsoft.Data.Sqlite;
 
 namespace DiscordBot.Data
 {
@@ -71,9 +69,14 @@ namespace DiscordBot.Data
 
         private void CreateFile(string path)
         {
-            FileInfo fi = new FileInfo(path);
+            if (path is null)
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
 
-            Directory.CreateDirectory(fi.Directory.FullName);
+            var fi = new FileInfo(path) ?? throw new ArgumentException($"Couldn't create file in directory {path}");
+
+            Directory.CreateDirectory(fi.Directory?.FullName ?? throw new ArgumentException($"Couldn't create file in directory {path}"));
 
             File.Create(Path.GetFileName(path));
         }

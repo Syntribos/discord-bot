@@ -5,6 +5,7 @@ using Discord.Audio;
 namespace DiscordBot.Tests.Dummies;
 
 public class GuildDummy : IGuild
+#nullable disable
 {
     public GuildDummy()
     : this(new List<IGuildUser>(), new List<IUser>())

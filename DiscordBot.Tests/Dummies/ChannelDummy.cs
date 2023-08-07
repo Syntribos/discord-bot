@@ -3,6 +3,7 @@
 namespace DiscordBot.Tests.Dummies;
 
 public class ChannelDummy : IChannel
+#nullable disable
 {
     public ulong Id => throw new NotImplementedException();
 

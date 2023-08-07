@@ -4,5 +4,5 @@ public interface IYoutubeService
 {
     Task<IEnumerable<BotVideoInfo>> Search(string query, int pageNumber);
 
-    IEnumerable<string> DownloadVideo(string outputPath, BotVideoInfo video);
+    Task<string> DownloadVideo(IVideoDownloader videoDownloader, IBotVideoInfo video);
 }

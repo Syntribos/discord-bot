@@ -1,6 +1,6 @@
-﻿using System.Reflection;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
+using DiscordBot.Commands.Runners;
 using DiscordBot.Config;
 using DiscordBot.Data;
 using DiscordBot.Commands;
@@ -12,7 +12,6 @@ using DiscordBot.Services.Youtube;
 using Discord.Commands;
 using Discord.Interactions;
 using Discord.WebSocket;
-using DiscordBot.Commands.Runners;
 using YoutubeDLSharp;
 using YouTubeSearch;
 
@@ -38,7 +37,7 @@ public class ServiceRegistrator : IServiceRegistrator
         _serviceCollection
             .RegisterInitializationServices(_botConfig)
             .RegisterDataRepositories()
-            .RegisterUtilityServices()
+            .RegisterServices()
             .RegisterCommandServices();
 
         _initilialized = true;
@@ -69,7 +68,7 @@ internal static class ServiceExtensions
             .AddSingleton<StreamerDataRepository>();
     }
 
-    internal static IServiceCollection RegisterUtilityServices(this IServiceCollection services)
+    internal static IServiceCollection RegisterServices(this IServiceCollection services)
     {
         return services
             .AddScoped<VideoSearch>()

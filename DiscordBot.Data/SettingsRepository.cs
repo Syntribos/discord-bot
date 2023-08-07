@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using DiscordBot.DataModels;
+﻿using DiscordBot.DataModels;
 using Microsoft.Data.Sqlite;
 
 namespace DiscordBot.Data

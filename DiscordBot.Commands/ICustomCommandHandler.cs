@@ -7,7 +7,7 @@ public interface ICustomCommandHandler
 {
     Task<bool> HandleCommand(SocketUserMessage commandMessage, SocketCommandContext context, int commandStart);
 
-    string AddCommand(string command, string response);
+    bool TryAddCommand(string command, string response);
 
     bool RemoveCommand(string command);
 

@@ -3,6 +3,7 @@
 namespace DiscordBot.Tests.Dummies;
 
 public class SelfUserDummy : UserDummy, ISelfUser
+#nullable disable
 {
     public SelfUserDummy(ulong id, string name)
         : base(id, name)

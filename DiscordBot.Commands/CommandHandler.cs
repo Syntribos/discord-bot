@@ -1,15 +1,11 @@
-﻿using Discord;
+﻿using System.Reflection;
+
+using DiscordBot.Config;
+
+using Discord;
 using Discord.Commands;
 using Discord.Interactions;
 using Discord.WebSocket;
-using DiscordBot.Config;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DiscordBot.Commands
 {
@@ -53,7 +49,7 @@ namespace DiscordBot.Commands
                 return;
             }
 
-            int argPos = 0;
+            var argPos = 0;
 
             if (!(message.HasStringPrefix(_botConfig.Prefix, ref argPos)
                 || message.HasMentionPrefix(_client.CurrentUser, ref argPos))
@@ -66,7 +62,7 @@ namespace DiscordBot.Commands
 
             if (!await _customCommandHandler.HandleCommand(message, context, argPos))
             {
-                var result = await _commandService.ExecuteAsync(context, argPos, _services);
+                await _commandService.ExecuteAsync(context, argPos, _services);
             }
         }
 

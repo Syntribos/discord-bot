@@ -9,7 +9,7 @@ namespace DiscordBot.Services
 {
     public class AudioService : IAudioService
     {
-        private readonly ConcurrentDictionary<ulong, IAudioClient> _connectedChannels = new ConcurrentDictionary<ulong, IAudioClient>();
+        private readonly ConcurrentDictionary<ulong, IAudioClient> _connectedChannels = new();
 
         public bool IsBotConnectedToGuild(IGuild guild)
         {
@@ -33,7 +33,7 @@ namespace DiscordBot.Services
 
         public async Task LeaveAudio(IGuild guild)
         {
-            if (_connectedChannels.TryRemove(guild.Id, out IAudioClient client))
+            if (_connectedChannels.TryRemove(guild.Id, out var client))
             {
                 await client.StopAsync();
             }
@@ -41,28 +41,26 @@ namespace DiscordBot.Services
 
         public async Task SendAudioAsync(IGuild guild, IMessageChannel channel, string path, CancellationToken token)
         {
-            if (!File.Exists(path) || !_connectedChannels.TryGetValue(guild.Id, out IAudioClient client))
+            if (!File.Exists(path) || !_connectedChannels.TryGetValue(guild.Id, out var client))
             {
                 return;
             }
 
-            using (var ffmpeg = CreateProcess(path))
-            using (var stream = client.CreatePCMStream(AudioApplication.Music))
-            using (var bws = new BufferedWriteStream(stream, client, 500, token))
+            using var ffmpeg = CreateProcess(path);
+            await using var stream = client.CreatePCMStream(AudioApplication.Music);
+            await using var bws = new BufferedWriteStream(stream, client, 500, token);
+            try
             {
-                try
-                {
-                    var output = ffmpeg.StandardOutput.BaseStream;
-                    await ffmpeg.StandardOutput.BaseStream.CopyToAsync(stream);
-                }
-                catch (Exception e)
-                {
-                    await stream.FlushAsync();
-                }
+                var output = ffmpeg.StandardOutput.BaseStream;
+                await ffmpeg.StandardOutput.BaseStream.CopyToAsync(stream, token);
+            }
+            catch (Exception)
+            {
+                await stream.FlushAsync(token);
             }
         }
 
-        private Process CreateProcess(string path)
+        private static Process CreateProcess(string path)
         {
             return Process.Start(new ProcessStartInfo
             {
@@ -70,7 +68,7 @@ namespace DiscordBot.Services
                 Arguments = $@"-i ""{path}"" -ac 2 -f s16le -ar 48000 pipe:1",
                 RedirectStandardOutput = true,
                 UseShellExecute = false
-            });
+            }) ?? throw new Exception("Something went wrong creating FFMPEG process.");
         }
     }
 }

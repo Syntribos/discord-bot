@@ -1,8 +1,10 @@
 ﻿using Discord;
+#pragma warning disable CS0108, CS0114
 
 namespace DiscordBot.Tests.Dummies;
 
 public class GuildChannelDummy : ChannelDummy, IGuildChannel
+#nullable disable
 {
     public Task DeleteAsync(RequestOptions options = null)
     {

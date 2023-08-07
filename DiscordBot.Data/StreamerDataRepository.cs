@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Data.Sqlite;
+﻿using Microsoft.Data.Sqlite;
 
 using DiscordBot.DataModels.Twitch;
 using DiscordBot.DataModels;
@@ -9,11 +7,12 @@ namespace DiscordBot.Data
 {
     public class StreamerDataRepository : DataRepository
     {
-        private StreamerFactory? _streamerFactory;
+        private StreamerFactory _streamerFactory;
 
-        public StreamerDataRepository(IDatabaseInfo databaseInfo)
+        public StreamerDataRepository(IDatabaseInfo databaseInfo, StreamerFactory streamerFactory)
             : base(databaseInfo)
         {
+            _streamerFactory = streamerFactory ?? throw new ArgumentNullException(nameof(streamerFactory));
         }
 
         public string DefaultAnnounceMessage

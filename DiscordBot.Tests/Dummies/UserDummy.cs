@@ -3,6 +3,7 @@
 namespace DiscordBot.Tests.Dummies;
 
 public class UserDummy : IUser
+#nullable disable
 {
     private const string DEFAULT_NAME = "dummy user";
 

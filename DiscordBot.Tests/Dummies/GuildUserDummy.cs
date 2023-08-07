@@ -3,6 +3,7 @@
 namespace DiscordBot.Tests.Dummies;
 
 public class GuildUserDummy : UserDummy, IGuildUser
+#nullable disable
 {
     public GuildUserDummy(IGuild guild)
         : base(1)

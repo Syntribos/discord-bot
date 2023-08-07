@@ -1,8 +1,11 @@
 ﻿using Discord;
+// ReSharper disable InconsistentNaming
+#pragma warning disable CS0108, CS0114
 
 namespace DiscordBot.Tests.Dummies;
 
 public class TextChannelDummy : ChannelDummy, ITextChannel
+#nullable disable
 {
     public Task<IUserMessage> SendMessageAsync(string text = null, bool isTTS = false, Embed embed = null, RequestOptions options = null,
         AllowedMentions allowedMentions = null, MessageReference messageReference = null,

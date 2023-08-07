@@ -89,6 +89,7 @@ public class Bot : IBot
         }
 
         _client.Log += LogAsync;
+        _client.Ready += ReadyAsync;
     }
 
     private Task LogAsync(LogMessage log)

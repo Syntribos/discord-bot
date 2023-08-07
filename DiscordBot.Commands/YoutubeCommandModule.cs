@@ -1,10 +1,8 @@
-﻿using DiscordBot.Commands.Runners;
-using DiscordBot.Services;
+﻿using DiscordBot.Services;
 using DiscordBot.Services.Youtube;
 
 using Discord;
 using Discord.Interactions;
-using System.Threading;
 
 namespace DiscordBot.Commands;
 
@@ -35,7 +33,7 @@ public class YoutubeCommandModule : InteractionModuleBase<SocketInteractionConte
         var results = await _youtubeService.Search(args, 0);
     }
 
-    [SlashCommand("join", "Joins the executing user's current voice channel in preparation for audio playback", false, Discord.Interactions.RunMode.Async)]
+    [SlashCommand("join", "Joins the executing user's current voice channel in preparation for audio playback", false, RunMode.Async)]
     public async Task Join()
     {
         await _audioService.JoinAudio(Context.Guild, (Context.User as IVoiceState).VoiceChannel);

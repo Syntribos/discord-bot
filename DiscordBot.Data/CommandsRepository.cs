@@ -1,9 +1,4 @@
 ﻿using DiscordBot.DataModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DiscordBot.Data
 {
@@ -38,6 +33,7 @@ namespace DiscordBot.Data
             }
             catch (Exception)
             {
+                return new Dictionary<string, string>();
             }
 
             return customCommands;
@@ -80,7 +76,7 @@ namespace DiscordBot.Data
                         CreateParam("@response", response)
                     });
             }
-            catch(Exception e)
+            catch(Exception)
             {
                 return false;
             }

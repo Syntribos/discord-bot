@@ -6,51 +6,51 @@ namespace DiscordBot.Commands;
 
 public class CustomCommandHandler : ICustomCommandHandler
 {
+    /*
     private const ulong JESS_ID = 91037904133963776;
     private const ulong GHOSTIE_ID = 178915990954967040;
+    */
 
     private readonly CommandsRepository _commandsRepository;
     private readonly HashSet<string> _reservedCommands;
-    private Dictionary<string, string>? _commandResponse;
+    private readonly Dictionary<string, string> _commandResponse;
 
     public CustomCommandHandler(CommandsRepository commandsRepository)
     {
-        _commandsRepository = commandsRepository;
+        _commandsRepository = commandsRepository ?? throw new ArgumentNullException(nameof(commandsRepository));
         _reservedCommands = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        _commandResponse = new Dictionary<string, string>();
         Initialize();
     }
 
     public async Task<bool> HandleCommand(SocketUserMessage commandMessage, SocketCommandContext context, int commandStart)
     {
-        if (commandMessage.Author.Id != context.Client.CurrentUser.Id)
+        if (commandMessage.Author.Id == context.Client.CurrentUser.Id)
         {
-            var commandText = commandMessage.Content.Substring(commandStart);
-            if (_commandResponse.TryGetValue(commandText, out var response))
-            {
-                await commandMessage.Channel.SendMessageAsync(response);
-                return true;
-            }
+            return false;
         }
 
-        return false;
+        var commandText = commandMessage.Content[commandStart..];
+
+        if (!_commandResponse.TryGetValue(commandText, out var response))
+        {
+            return false;
+        }
+
+        await commandMessage.Channel.SendMessageAsync(response);
+        return true;
+
     }
 
-    public string AddCommand(string command, string response)
+    public bool TryAddCommand(string command, string response)
     {
-        if(_commandsRepository.AddNewCommand(command, response))
+        if (!_commandsRepository.AddNewCommand(command, response))
         {
-            _commandResponse[command] = response;
-
-            if (Uri.TryCreate(response, UriKind.Absolute, out Uri uriResult)
-                && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps))
-            {
-                response = $"<{response}>";
-            }
-
-            return response;
+            return false;
         }
 
-        return null;
+        _commandResponse[command] = response;
+        return true;
     }
 
     public bool HasCommand(string command)
@@ -84,22 +84,18 @@ public class CustomCommandHandler : ICustomCommandHandler
         return _commandResponse.Keys.OrderBy(x => x).ToList();
     }
 
-    private bool IsGoodMorningGif(string message)
-    {
-        return true;
-    }
-
     private void Initialize()
     {
-        _commandResponse = _commandsRepository.GetAllCustomCommands();
-
-        using (var fs = new FileStream("ReservedCommands.txt", FileMode.Open))
-        using (var sr = new StreamReader(fs))
+        foreach (var command in _commandsRepository.GetAllCustomCommands())
         {
-            foreach (var item in sr.ReadToEnd().Split(','))
-            {
-                _reservedCommands.Add(item.ToLower());
-            }
+            _commandResponse[command.Key] = command.Value;
+        }
+
+        using var fs = new FileStream("ReservedCommands.txt", FileMode.Open);
+        using var sr = new StreamReader(fs);
+        foreach (var item in sr.ReadToEnd().Split(','))
+        {
+            _reservedCommands.Add(item.ToLower());
         }
     }
 }
