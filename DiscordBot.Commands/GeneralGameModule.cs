@@ -5,16 +5,16 @@ namespace DiscordBot.Commands;
 
 public class GeneralGameModule : InteractionModuleBase<SocketInteractionContext>
 {
-    private readonly GeneralGameRunner _gameRunner;
+    private readonly GeneralGameRunner _generalGameRunner;
 
-    public GeneralGameModule(GeneralGameRunner gameRunner)
+    public GeneralGameModule(GeneralGameRunner generalGameRunner)
     {
-        _gameRunner = gameRunner ?? throw new ArgumentNullException(nameof(gameRunner));
+        _generalGameRunner = generalGameRunner ?? throw new ArgumentNullException(nameof(generalGameRunner));
     }
 
     [SlashCommand("flip", "Flips a coin.")]
     public async Task Flip()
     {
-        await _gameRunner.Flip(Context);
+        await _generalGameRunner.Flip(Context);
     }
 }

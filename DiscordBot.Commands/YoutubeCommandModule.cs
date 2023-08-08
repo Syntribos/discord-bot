@@ -33,10 +33,17 @@ public class YoutubeCommandModule : InteractionModuleBase<SocketInteractionConte
         var results = await _youtubeService.Search(args, 0);
     }
 
-    [SlashCommand("join", "Joins the executing user's current voice channel in preparation for audio playback", false, RunMode.Async)]
-    public async Task Join()
+    [SlashCommand("joinchannel", "Joins the executing user's current voice channel in preparation for audio playback", false, RunMode.Async)]
+    public async Task Join(IVoiceChannel? channel = null)
     {
-        await _audioService.JoinAudio(Context.Guild, (Context.User as IVoiceState).VoiceChannel);
+        channel ??= (Context.User as IGuildUser)?.VoiceChannel;
+        if (channel == null)
+        {
+            await RespondAsync("User must be in a voice channel, or a voice channel must be passed as an argument."); return;
+        }
+
+        // For the next step with transmitting audio, you would want to pass this Audio Client in to a service.
+        var audioClient = await channel.ConnectAsync();
     }
 
     [SlashCommand("leave", "Leaves the current audio channel")]

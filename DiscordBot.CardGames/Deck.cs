@@ -16,21 +16,15 @@ public class Deck
 
     public static Deck Create52CardDeck()
     {
-        var cards = new List<Card>();
-        
-        cards.AddRange(_suits.SelectMany(suit => _values.Select(value => new Card(suit, value))).ToList());
-
+        var cards = _suits.SelectMany(suit => _values.Select(value => new Card(suit, value))).ToList();
         return new Deck(cards);
     }
     
     public static Deck Create54CardDeck()
     {
-        var cards = new List<Card>();
-
-        cards.AddRange(_suits.SelectMany(suit => _values.Select(value => new Card(suit, value))).ToList());
-        cards.AddRange(new List<Card> { Card.CreateJoker(), Card.CreateJoker()});
-
-        return new Deck(cards);
+        var deck = Create52CardDeck();
+        deck._cards.AddRange(new List<Card> { Card.CreateJoker(), Card.CreateJoker()});
+        return deck;
     }
     
     public static Deck CreateShuffled54CardDeck()
@@ -62,5 +56,18 @@ public class Deck
     public List<Card> Draw(int count)
     {
         return count <= 0 ? Enumerable.Empty<Card>().ToList() : Enumerable.Range(0, count).Select(x => Draw()).ToList();
+    }
+
+    public Deck Merge(Deck toMerge)
+    {
+        _cards.AddRange(toMerge._cards);
+        return this;
+    }
+
+    public Deck MergeAndShuffle(Deck toMerge)
+    {
+        var newDeck = Merge(toMerge);
+        newDeck.Shuffle();
+        return newDeck;
     }
 }
