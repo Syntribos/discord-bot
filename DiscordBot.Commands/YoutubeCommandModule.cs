@@ -79,14 +79,8 @@ public class YoutubeCommandModule : InteractionModuleBase<SocketInteractionConte
     [SlashCommand("leave", "Leaves the current audio channel")]
     public async Task Leave()
     {
+        await RespondAsync("Leaving voice channel.");
         await _audioService.LeaveAudio(Context.Guild);
-    }
-
-    [SlashCommand("skip", "Skips the currently playing song")]
-    public async Task Skip()
-    {
-        await RespondAsync("Skipping current song...");
-        _tokenSource.Cancel();
     }
 
     private string FormatDuration(TimeSpan duration)

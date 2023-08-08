@@ -75,9 +75,9 @@ namespace DiscordBot.Services
             {
                 await output.CopyToAsync(stream, token);
             }
-            catch (Exception)
+            finally
             {
-                await stream.FlushAsync(token);
+                await stream.FlushAsync(CancellationToken.None);   
             }
         }
 
