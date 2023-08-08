@@ -2,6 +2,7 @@
 using DiscordBot.Services.Youtube;
 
 using Discord;
+using Discord.Audio;
 using Discord.Interactions;
 
 namespace DiscordBot.Commands;
@@ -12,6 +13,8 @@ public class YoutubeCommandModule : InteractionModuleBase<SocketInteractionConte
     private readonly IYoutubeService _youtubeService;
     private readonly IVideoToAudioConverter _videoToAudioConverter;
     private readonly CancellationTokenSource _tokenSource;
+
+    private IAudioClient? _audioClient;
 
     public YoutubeCommandModule(IAudioService audioService, IYoutubeService youtubeService, IVideoToAudioConverter videoToAudioConverter)
     {
@@ -33,7 +36,7 @@ public class YoutubeCommandModule : InteractionModuleBase<SocketInteractionConte
         var results = await _youtubeService.Search(args, 0);
     }
 
-    [SlashCommand("joinchannel", "Joins the executing user's current voice channel in preparation for audio playback", false, RunMode.Async)]
+    [SlashCommand("join", "Joins the executing user's current voice channel in preparation for audio playback")]
     public async Task Join(IVoiceChannel? channel = null)
     {
         channel ??= (Context.User as IGuildUser)?.VoiceChannel;
@@ -43,7 +46,15 @@ public class YoutubeCommandModule : InteractionModuleBase<SocketInteractionConte
         }
 
         // For the next step with transmitting audio, you would want to pass this Audio Client in to a service.
-        var audioClient = await channel.ConnectAsync();
+        try
+        {
+            _audioClient = await channel.ConnectAsync();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
+        await RespondAsync("Joined channel.");
     }
 
     [SlashCommand("leave", "Leaves the current audio channel")]
