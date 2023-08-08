@@ -1,14 +1,20 @@
 ﻿using Discord.Interactions;
+using DiscordBot.Commands.Runners;
 
 namespace DiscordBot.Commands;
 
 public class GeneralGameModule : InteractionModuleBase<SocketInteractionContext>
 {
-    private readonly Random _rnd = new Random();
+    private readonly GeneralGameRunner _gameRunner;
+
+    public GeneralGameModule(GeneralGameRunner gameRunner)
+    {
+        _gameRunner = gameRunner ?? throw new ArgumentNullException(nameof(gameRunner));
+    }
 
     [SlashCommand("flip", "Flips a coin.")]
     public async Task Flip()
     {
-        await RespondAsync($"You flipped a {(_rnd.Next(0, 2) == 0 ? "Heads" : "Tails")}.");
+        await _gameRunner.Flip(Context);
     }
 }
