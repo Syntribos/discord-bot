@@ -87,6 +87,7 @@ internal static class ServiceExtensions
 
         return services
             .AddSingleton<AdminCommandRunner>()
+            .AddSingleton<CardGameRunner>()
             .AddSingleton(x => new InteractionService(x.GetRequiredService<DiscordSocketClient>()))
             .AddSingleton<ICustomCommandHandler, CustomCommandHandler>()
             .AddSingleton<CommandHandler>()
