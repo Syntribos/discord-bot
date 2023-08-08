@@ -26,6 +26,8 @@ namespace DiscordBot.Data
 
                 var reader = command.ExecuteReader();
 
+                reader.GetInt32(reader.GetOrdinal("taskId"));
+
                 while(reader.Read())
                 {
                     customCommands.Add(reader.GetString(0), reader.GetString(1));

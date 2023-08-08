@@ -6,10 +6,10 @@ namespace DiscordBot.Services
     {
         bool IsBotConnectedToGuild(IGuild guild);
 
-        Task JoinAudio(IGuild guild, IVoiceChannel target);
+        Task<bool> TryJoinAudio(IGuild guild, IVoiceChannel target);
 
-        Task LeaveAudio(IGuild guild);
+        Task<bool> LeaveAudio(IGuild guild);
 
-        Task SendAudioAsync(IGuild guild, IMessageChannel channel, string path, CancellationToken token);
+        Task SendAudioAsync(IGuild guild, string path, CancellationToken token);
     }
 }

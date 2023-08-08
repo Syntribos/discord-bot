@@ -4,7 +4,7 @@ using DiscordBot.Utilities;
 using YoutubeDLSharp;
 using YouTubeSearch;
 
-/*
+
 using var tempFile = new TempDirectory(@"C:\Users\Jess\Desktop\tempy");
 var ydl = new YoutubeDL();
 
@@ -16,7 +16,6 @@ Console.WriteLine(result.DownloadUrl);
 
 var path = await service.DownloadVideo(vdl, result);
 Console.WriteLine(path);
-*/
 
 var deck1 = Deck.Create52CardDeck();
 var deck2 = Deck.CreateShuffled52CardDeck();

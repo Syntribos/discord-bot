@@ -71,11 +71,10 @@ internal static class ServiceExtensions
     internal static IServiceCollection RegisterServices(this IServiceCollection services)
     {
         return services
-            .AddScoped<VideoSearch>()
-            .AddScoped<YoutubeDL>()
-            .AddScoped<IAudioService, AudioService>()
-            .AddScoped<IYoutubeService, YoutubeService>()
-            .AddScoped<IVideoToAudioConverter, VideoToAudioConverter>();
+            .AddSingleton<VideoSearch>()
+            .AddSingleton<IAudioService, AudioService>()
+            .AddSingleton<IYoutubeService, YoutubeService>()
+            .AddSingleton<IVideoToAudioConverter, VideoToAudioConverter>();
     }
 
     internal static IServiceCollection RegisterCommandServices(this IServiceCollection services)

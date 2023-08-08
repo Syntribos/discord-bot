@@ -4,6 +4,7 @@ using DiscordBot.Services.Youtube;
 using Discord;
 using Discord.Audio;
 using Discord.Interactions;
+using DiscordBot.Utilities;
 
 namespace DiscordBot.Commands;
 
@@ -24,37 +25,55 @@ public class YoutubeCommandModule : InteractionModuleBase<SocketInteractionConte
         _tokenSource = new CancellationTokenSource();
     }
 
-    [SlashCommand("play", "asd")]
+    [SlashCommand("play", "asd", runMode: RunMode.Async)]
     public async Task PlaySongInChannel(string args)
     {
         if (!_audioService.IsBotConnectedToGuild(Context.Guild))
         {
-            await Context.Channel.SendMessageAsync("Bot must be connected to a voice channel first before playing.");
+            await RespondAsync("Bot must be connected to a voice channel first before playing.");
             return;
         }
 
-        var results = await _youtubeService.Search(args, 0);
+        var results = (await _youtubeService.Search(args, 0)).ToList();
+        using var tmpDir = new TempDirectory(@"C:\Users\Jess\Desktop\tempy");
+        var vid = results?.First();
+
+        await RespondAsync("Grabbing video...");
+        var audioPath =
+            await _youtubeService.DownloadVideo(VideoDownloaderFactory.CreateDownloader(tmpDir), results.First());
+
+        await Context.Channel.SendMessageAsync($"Playing {vid}"); 
+        await _audioService.SendAudioAsync(Context.Guild, audioPath, _tokenSource.Token);
     }
 
-    [SlashCommand("join", "Joins the executing user's current voice channel in preparation for audio playback")]
+    [SlashCommand("join", "Joins the executing user's current voice channel in preparation for audio playback", runMode: RunMode.Async)]
     public async Task Join(IVoiceChannel? channel = null)
     {
         channel ??= (Context.User as IGuildUser)?.VoiceChannel;
         if (channel == null)
         {
-            await RespondAsync("User must be in a voice channel, or a voice channel must be passed as an argument."); return;
+            await RespondAsync("User must be in a voice channel, or a voice channel must be passed as an argument.");
+            return;
         }
 
         // For the next step with transmitting audio, you would want to pass this Audio Client in to a service.
         try
         {
-            _audioClient = await channel.ConnectAsync();
+            if (!await _audioService.TryJoinAudio(Context.Guild, channel))
+            {
+                await RespondAsync($"Couldn't connect to channel {channel.Name}.");
+                return;
+            }
         }
         catch (Exception e)
         {
+            await RespondAsync($"Couldn't connect to channel {channel.Name}.");
             Console.WriteLine(e.Message);
+
+            return;
         }
-        await RespondAsync("Joined channel.");
+        
+        await RespondAsync("Joined voice channel.");
     }
 
     [SlashCommand("leave", "Leaves the current audio channel")]
@@ -66,7 +85,7 @@ public class YoutubeCommandModule : InteractionModuleBase<SocketInteractionConte
     [SlashCommand("skip", "Skips the currently playing song")]
     public async Task Skip()
     {
-        await Context.Channel.SendMessageAsync("Skipping current song...");
+        await RespondAsync("Skipping current song...");
         _tokenSource.Cancel();
     }
 

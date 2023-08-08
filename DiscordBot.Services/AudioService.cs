@@ -16,30 +16,52 @@ namespace DiscordBot.Services
             return _connectedChannels.ContainsKey(guild.Id);
         }
 
-        public async Task JoinAudio(IGuild guild, IVoiceChannel target)
+        public async Task<bool> TryJoinAudio(IGuild guild, IVoiceChannel target)
         {
-            if (target.Guild.Id != guild.Id || _connectedChannels.ContainsKey(guild.Id))
+            try
             {
-                return;
+                if (target.Guild.Id != guild.Id || _connectedChannels.ContainsKey(guild.Id))
+                {
+                    return false;
+                }
+
+                var audioClient = await target.ConnectAsync();
+
+                if (_connectedChannels.TryAdd(guild.Id, audioClient))
+                {
+                    return true;
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
             }
 
-            var audioClient = await target.ConnectAsync();
-
-            if (_connectedChannels.TryAdd(guild.Id, audioClient))
-            {
-                //Maybe add logging later
-            }
+            return false;
         }
 
-        public async Task LeaveAudio(IGuild guild)
+        public async Task<bool> LeaveAudio(IGuild guild)
         {
-            if (_connectedChannels.TryRemove(guild.Id, out var client))
+            try
             {
-                await client.StopAsync();
+                if (_connectedChannels.TryRemove(guild.Id, out var client))
+                {
+                    await client.StopAsync();
+                    client.Dispose();
+
+                    return true;
+                }
             }
+            catch (Exception e)
+            {
+                await Console.Error.WriteLineAsync($"Problem leaving voice channel in guild {guild.Id}: {e.Message}");
+            }
+
+            return false;
         }
 
-        public async Task SendAudioAsync(IGuild guild, IMessageChannel channel, string path, CancellationToken token)
+        public async Task SendAudioAsync(IGuild guild, string path, CancellationToken token)
         {
             if (!File.Exists(path) || !_connectedChannels.TryGetValue(guild.Id, out var client))
             {
@@ -47,12 +69,11 @@ namespace DiscordBot.Services
             }
 
             using var ffmpeg = CreateProcess(path);
-            await using var stream = client.CreatePCMStream(AudioApplication.Music);
-            await using var bws = new BufferedWriteStream(stream, client, 500, token);
+            await using var output = ffmpeg.StandardOutput.BaseStream;
+            await using var stream = client.CreatePCMStream(AudioApplication.Mixed);
             try
             {
-                var output = ffmpeg.StandardOutput.BaseStream;
-                await ffmpeg.StandardOutput.BaseStream.CopyToAsync(stream, token);
+                await output.CopyToAsync(stream, token);
             }
             catch (Exception)
             {
