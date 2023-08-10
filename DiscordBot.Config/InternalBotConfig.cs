@@ -7,11 +7,13 @@ public class InternalBotConfig
     private string _prefix;
 
     [JsonConstructor]
-    public InternalBotConfig(string token, string prefix, string databaseLocation)
+    public InternalBotConfig(string token, string prefix, string databaseLocation, string lastFmApiKey, string lastFmSecret)
     {
-        Token = token;
-        _prefix = prefix;
-        DatabaseLocation = databaseLocation;
+        Token = token ?? throw new ArgumentNullException(nameof(token));
+        _prefix = prefix ?? throw new ArgumentNullException(nameof(prefix));
+        DatabaseLocation = databaseLocation ?? throw new ArgumentNullException(nameof(databaseLocation));
+        LastFmApiKey = lastFmApiKey ?? throw new ArgumentNullException(nameof(lastFmApiKey));
+        LastFmSecret = lastFmSecret ?? throw new ArgumentNullException(nameof(lastFmSecret));
     }
 
     public string Token { get; }
@@ -30,4 +32,8 @@ public class InternalBotConfig
     }
 
     public string DatabaseLocation { get; }
+
+    public string LastFmApiKey { get; }
+
+    public string LastFmSecret { get; }
 }

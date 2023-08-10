@@ -12,16 +12,15 @@ public class YoutubeCommandModule : InteractionModuleBase<SocketInteractionConte
 {
     private readonly IAudioService _audioService;
     private readonly IYoutubeService _youtubeService;
-    private readonly IVideoToAudioConverter _videoToAudioConverter;
+    // private readonly IVideoToAudioConverter _videoToAudioConverter;
     private readonly CancellationTokenSource _tokenSource;
 
     private IAudioClient? _audioClient;
 
-    public YoutubeCommandModule(IAudioService audioService, IYoutubeService youtubeService, IVideoToAudioConverter videoToAudioConverter)
+    public YoutubeCommandModule(IAudioService audioService, IYoutubeService youtubeService)
     {
         _audioService = audioService ?? throw new ArgumentNullException(nameof(audioService));
         _youtubeService = youtubeService ?? throw new ArgumentNullException(nameof(youtubeService));
-        _videoToAudioConverter = videoToAudioConverter ?? throw new ArgumentNullException(nameof(videoToAudioConverter));
         _tokenSource = new CancellationTokenSource();
     }
 
@@ -39,10 +38,11 @@ public class YoutubeCommandModule : InteractionModuleBase<SocketInteractionConte
         var vid = results?.First();
 
         await RespondAsync("Grabbing video...");
+        var video = results?.FirstOrDefault() ?? throw new ArgumentNullException(nameof(results));
         var audioPath =
-            await _youtubeService.DownloadVideo(VideoDownloaderFactory.CreateDownloader(tmpDir), results.First());
+            await _youtubeService.DownloadVideo(VideoDownloaderFactory.CreateDownloader(tmpDir), video);
 
-        await Context.Channel.SendMessageAsync($"Playing {vid}"); 
+        var msg = await Context.Channel.SendMessageAsync($"Playing {vid}"); 
         await _audioService.SendAudioAsync(Context.Guild, audioPath, _tokenSource.Token);
     }
 

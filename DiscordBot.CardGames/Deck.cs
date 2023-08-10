@@ -55,7 +55,7 @@ public class Deck
 
     public List<Card> Draw(int count)
     {
-        return count <= 0 ? Enumerable.Empty<Card>().ToList() : Enumerable.Range(0, count).Select(x => Draw()).ToList();
+        return count <= 0 ? Enumerable.Empty<Card>().ToList() : Enumerable.Range(0, count).Select(_ => Draw()).ToList();
     }
 
     public Deck Merge(Deck toMerge)

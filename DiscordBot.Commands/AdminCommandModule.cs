@@ -21,8 +21,8 @@ public class AdminCommandModule : InteractionModuleBase<SocketInteractionContext
         _adminCommandRunner = adminCommandRunner ?? throw new ArgumentNullException(nameof(adminCommandRunner));
     }
     
-    [SlashCommand("ban", "Bans the provided user")]
     [RequireUserPermission(GuildPermission.BanMembers)]
+    [SlashCommand("ban", "Bans the provided user")]
     public async Task BanUser(IUser user, PurgeDays days = PurgeDays.None, string reason = "No reason given.")
     {
         await _adminCommandRunner.BanUser(Context, user, days, reason);

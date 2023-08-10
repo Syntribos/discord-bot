@@ -22,42 +22,42 @@ public enum BotState
 
 public class Bot : IBot
 {
-    private BotState _state;
     private DiscordSocketClient? _client;
     private CommandHandler? _commands;
     private IServiceProvider? _serviceProvider;
 
     public Bot()
     {
-        _state = BotState.Uninitialized;
+        State = BotState.Uninitialized;
     }
 
-    public BotState State => _state;
+    public BotState State { get; private set; }
 
     public async Task Initialize(IServiceRegistrator serviceRegistrator)
     {
-        if (_state != BotState.Uninitialized)
+        if (State != BotState.Uninitialized)
         {
-            throw new Exception($"{nameof(Bot)} cannot be initialized from state {_state}.");
+            throw new Exception($"{nameof(Bot)} cannot be initialized from state {State}.");
         }
 
-        _state = BotState.Initializing;
+        State = BotState.Initializing;
 
         serviceRegistrator.RegisterServices();
         _serviceProvider = serviceRegistrator.BuildServices();
         _client = _serviceProvider.GetRequiredService<DiscordSocketClient>();
         SetupClientEvents();
+        CreateBackgroundTasks();
 
         _commands = _serviceProvider.GetRequiredService<CommandHandler>();
         await _commands.InstallCommandsAsync();
         await _commands.InstallInteractionsAsync();
 
-        _state = BotState.Initialized;
+        State = BotState.Initialized;
     }
 
     public async Task Run(BotConfig botConfig)
     {
-        if (_state != BotState.Initialized || _client is null)
+        if (State != BotState.Initialized || _client is null)
         {
             throw new Exception($"Client has not been initialized yet. Please call {nameof(Initialize)} before {nameof(Run)}.");
         }
@@ -65,20 +65,20 @@ public class Bot : IBot
         await _client.LoginAsync(TokenType.Bot, botConfig.Token);
         await _client.StartAsync();
 
-        _state = BotState.Running;
+        State = BotState.Running;
     }
 
     public async Task Shutdown()
     {
-        if (_state != BotState.Running || _client is null)
+        if (State != BotState.Running || _client is null)
         {
             throw new Exception($"Client cannot be shut down in this state.");
         }
 
-        _state = BotState.ShuttingDown;
+        State = BotState.ShuttingDown;
         await _client.LogoutAsync();
         await _client.StopAsync();
-        _state = BotState.ShutDown;
+        State = BotState.ShutDown;
     }
 
     private void SetupClientEvents()

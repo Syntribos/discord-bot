@@ -1,87 +1,84 @@
 ﻿using DiscordBot.DataModels;
 
-namespace DiscordBot.Data
+namespace DiscordBot.Data;
+
+public class CommandsRepository : DataRepository
 {
-    public class CommandsRepository : DataRepository
+    public CommandsRepository(IDatabaseInfo databaseInfo)
+        : base(databaseInfo)
     {
-        public CommandsRepository(IDatabaseInfo databaseInfo)
-            : base(databaseInfo)
-        {
-            _initialized = true;
-        }
+        _initialized = true;
+    }
 
-        public Dictionary<string, string> GetAllCustomCommands()
-        {
-            var customCommands = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+    public Dictionary<string, string> GetAllCustomCommands()
+    {
+        var customCommands = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-            try
-            {
-                _connection.Open();
-                var command = _connection.CreateCommand();
-                command.CommandText =
-                    @"
+        try
+        {
+            _connection.Open();
+            var command = _connection.CreateCommand();
+            command.CommandText =
+                @"
                         SELECT command, response
                         FROM customCommands
                     ";
 
-                var reader = command.ExecuteReader();
+            var reader = command.ExecuteReader();
 
-                reader.GetInt32(reader.GetOrdinal("taskId"));
-
-                while(reader.Read())
-                {
-                    customCommands.Add(reader.GetString(0), reader.GetString(1));
-                }
-            }
-            catch (Exception)
+            while(reader.Read())
             {
-                return new Dictionary<string, string>();
+                customCommands.Add(reader.GetString(0), reader.GetString(1));
             }
-
-            return customCommands;
+        }
+        catch (Exception)
+        {
+            return new Dictionary<string, string>();
         }
 
-        public bool DeleteCommand(string command)
+        return customCommands;
+    }
+
+    public bool DeleteCommand(string command)
+    {
+        try
         {
-            try
-            {
-                return ExecuteBooleanNonQuery(
-                    @"
+            return ExecuteBooleanNonQuery(
+                @"
                         DELETE FROM customCommands
                         WHERE command = @command
                     ",
-                    new List<Tuple<string, string>>
-                    {
-                        CreateParam("@command", command)
-                    }
-                );
-            }
-            catch
-            {
-                return false;
-            }
+                new List<Tuple<string, string>>
+                {
+                    CreateParam("@command", command)
+                }
+            );
         }
-
-        public bool AddNewCommand(string command, string response)
+        catch
         {
-            try
-            {
-                return ExecuteBooleanNonQuery(
-                    @"
+            return false;
+        }
+    }
+
+    public bool AddNewCommand(string command, string response)
+    {
+        try
+        {
+            return ExecuteBooleanNonQuery(
+                @"
                         INSERT OR REPLACE
                         INTO customCommands (command, response)
                         VALUES (@command, @response)
                     ",
-                    new List<Tuple<string, string>>
-                    {
-                        CreateParam("@command", command),
-                        CreateParam("@response", response)
-                    });
-            }
-            catch(Exception)
-            {
-                return false;
-            }
+                new List<Tuple<string, string>>
+                {
+                    CreateParam("@command", command),
+                    CreateParam("@response", response)
+                });
+        }
+        catch(Exception)
+        {
+            return false;
         }
     }
 }

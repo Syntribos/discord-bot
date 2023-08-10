@@ -9,7 +9,7 @@ using var tempFile = new TempDirectory(@"C:\Users\Jess\Desktop\tempy");
 var ydl = new YoutubeDL();
 
 var vdl = VideoDownloaderFactory.CreateDownloader(tempFile);
-var service = new YoutubeService(new VideoSearch(), ydl) as IYoutubeService;
+var service = new YoutubeService(new VideoSearch()) as IYoutubeService;
 var result = (await service.Search("chelmico ずるいね", 1)).ToList().First();
 Console.WriteLine(result.DownloadUrl);
 

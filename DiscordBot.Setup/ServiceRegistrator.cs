@@ -14,6 +14,7 @@ using Discord.Interactions;
 using Discord.WebSocket;
 using YoutubeDLSharp;
 using YouTubeSearch;
+using Discord.Addons.Interactive;
 
 namespace DiscordBot.Setup;
 
@@ -72,6 +73,8 @@ internal static class ServiceExtensions
     {
         return services
             .AddSingleton<VideoSearch>()
+            .AddSingleton<LastFmService>()
+            .AddSingleton<InteractiveService>()
             .AddSingleton<IAudioService, AudioService>()
             .AddSingleton<IYoutubeService, YoutubeService>()
             .AddSingleton<IVideoToAudioConverter, VideoToAudioConverter>();
@@ -87,7 +90,8 @@ internal static class ServiceExtensions
         return services
             .AddSingleton<AdminCommandRunner>()
             .AddSingleton<GeneralGameRunner>()
-            .AddSingleton<CardGameRunner>()
+            .AddSingleton<CardGameCommandRunner>()
+            .AddSingleton<LastFmCommandRunner>()
             .AddSingleton(x => new InteractionService(x.GetRequiredService<DiscordSocketClient>()))
             .AddSingleton<ICustomCommandHandler, CustomCommandHandler>()
             .AddSingleton<CommandHandler>()

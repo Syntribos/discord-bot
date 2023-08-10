@@ -5,9 +5,9 @@ namespace DiscordBot.Commands;
 
 public class CardGameModule : InteractionModuleBase<SocketInteractionContext>
 {
-    private readonly CardGameRunner _cardGameRunner;
+    private readonly CardGameCommandRunner _cardGameRunner;
 
-    public CardGameModule(CardGameRunner cardGameRunner)
+    public CardGameModule(CardGameCommandRunner cardGameRunner)
     {
         _cardGameRunner = cardGameRunner ?? throw new ArgumentNullException(nameof(cardGameRunner));
     }

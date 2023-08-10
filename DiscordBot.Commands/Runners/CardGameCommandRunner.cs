@@ -3,7 +3,7 @@ using DiscordBot.CardGames;
 
 namespace DiscordBot.Commands.Runners;
 
-public class CardGameRunner
+public class CardGameCommandRunner
 {
     public async Task DrawCards(IInteractionContext context, int cardCount)
     {
