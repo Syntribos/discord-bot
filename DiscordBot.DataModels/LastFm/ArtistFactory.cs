@@ -4,8 +4,8 @@ namespace DiscordBot.DataModels.LastFm;
 
 public static class ArtistFactory
 {
-    public static IArtist BuildArtist(string artistName)
+    public static IArtist BuildArtist(string artistName, string? artistLink)
     {
-        return new Artist(artistName);
+        return new Artist(artistName, artistLink);
     }
 }

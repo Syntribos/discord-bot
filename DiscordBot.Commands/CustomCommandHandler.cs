@@ -30,7 +30,7 @@ public class CustomCommandHandler : ICustomCommandHandler
             return false;
         }
 
-        var commandText = commandMessage.Content[commandStart..];
+        var commandText = commandMessage.Content[commandStart..]?.ToLower() ?? string.Empty;
 
         if (!_commandResponse.TryGetValue(commandText, out var response))
         {

@@ -3,4 +3,6 @@
 public interface IArtist
 {
     string Name { get; }
+
+    string GetLinkedName();
 }

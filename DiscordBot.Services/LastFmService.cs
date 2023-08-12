@@ -50,10 +50,9 @@ public class LastFmService
 
             return tracks.Content.Select(x =>
             {
-                var timestamp = x.TimePlayed?.ToUnixTimeSeconds();
-                var artist = ArtistFactory.BuildArtist(x.ArtistName);
-                return SongFactory.BuildSong(x.Name, artist, timestamp);
-            });
+                var artist = ArtistFactory.BuildArtist(x.ArtistName, x.ArtistUrl.AbsoluteUri);
+                return SongFactory.BuildSong(x.Name, artist, x.Url.AbsoluteUri, x.IsNowPlaying, x.TimePlayed);
+            }).ToList();
         }
         catch(Exception ex)
         {

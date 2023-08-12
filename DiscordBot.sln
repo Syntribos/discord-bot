@@ -33,6 +33,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Testing", "Testing", "{F997
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscordBot.Services", "DiscordBot.Services\DiscordBot.Services.csproj", "{4AD1C621-F5A8-4D4E-9955-9BFC2BF661EC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscordBot.DiscordUtilities", "DiscordBot.DiscordUtilities\DiscordBot.DiscordUtilities.csproj", "{A60B1C5B-5AF5-4C33-8A7F-88ADF084213B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,10 @@ Global
 		{4AD1C621-F5A8-4D4E-9955-9BFC2BF661EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4AD1C621-F5A8-4D4E-9955-9BFC2BF661EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4AD1C621-F5A8-4D4E-9955-9BFC2BF661EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A60B1C5B-5AF5-4C33-8A7F-88ADF084213B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A60B1C5B-5AF5-4C33-8A7F-88ADF084213B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A60B1C5B-5AF5-4C33-8A7F-88ADF084213B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A60B1C5B-5AF5-4C33-8A7F-88ADF084213B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -103,6 +109,7 @@ Global
 		{E3B8FAB4-0FB1-47CE-9271-AB2D195E9DC6} = {502131B5-87E4-408B-A8AA-9FFFD0DDE1B9}
 		{D0BF63D7-C4D6-4760-9D84-EFFE986EE6B1} = {F997D721-0976-40DE-9325-902E51588926}
 		{4AD1C621-F5A8-4D4E-9955-9BFC2BF661EC} = {502131B5-87E4-408B-A8AA-9FFFD0DDE1B9}
+		{A60B1C5B-5AF5-4C33-8A7F-88ADF084213B} = {502131B5-87E4-408B-A8AA-9FFFD0DDE1B9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0CA1234A-EAD3-43BA-9921-0C736B0ACC1A}

@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Discord.Net.WebSocket" Version="3.11.0" />
+      <PackageReference Include="Discord.Net.WebSocket" Version="3.12.0" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
       <PackageReference Include="YoutubeDLSharp" Version="1.0.0" />
       <PackageReference Include="YouTubeSearch" Version="2.2.6" />

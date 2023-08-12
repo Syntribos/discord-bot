@@ -1,11 +1,19 @@
 ﻿namespace DiscordBot.DataModels.LastFm.Implementations;
 
-internal class Artist : IArtist
+public class Artist : IArtist
 {
-    internal Artist(string name)
+    private readonly string? _artistLink;
+
+    internal Artist(string name, string? artistLink)
     {
         Name = name;
+        _artistLink = artistLink;
     }
 
     public string Name { get; }
+
+    public string GetLinkedName()
+    {
+        return _artistLink != null ? $"[{Name}]({_artistLink})" : Name;
+    }
 }

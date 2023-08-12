@@ -1,20 +1,28 @@
 ﻿namespace DiscordBot.DataModels.LastFm.Implementations;
 
-internal class RecentSong : ISong
+public class RecentSong : ISong
 {
-    internal RecentSong(string name, IArtist artist, long lastPlayedUnixTimestamp, bool? currentlyPlaying)
+    private readonly string? _songLink;
+
+    internal RecentSong(string name, IArtist artist, string? songLink, bool? currentlyPlaying, DateTimeOffset? lastPlayDateTime)
     {
         Name = name;
         Artist = artist;
-        LastPlayedUnixTimestamp = lastPlayedUnixTimestamp;
+        _songLink = songLink;
         CurrentlyPlaying = currentlyPlaying ?? false;
+        LastPlayDateTime = lastPlayDateTime;
     }
 
     public string Name { get; }
 
     public IArtist Artist { get; }
     
-    public long LastPlayedUnixTimestamp { get; }
-    
     public bool CurrentlyPlaying { get; }
+
+    public DateTimeOffset? LastPlayDateTime { get; }
+
+    public string GetLinkedName()
+    {
+        return _songLink != null ? $"[{Name}]({_songLink})" : Name;
+    }
 }

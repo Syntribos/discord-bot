@@ -4,10 +4,10 @@ namespace DiscordBot.DataModels.LastFm;
 
 public static class SongFactory
 {
-    public static ISong BuildSong(string songName, IArtist artist, long? lastPlayedUnixTimestamp = null, bool? currentlyPlaying = null)
+    public static ISong BuildSong(string songName, IArtist artist, string? songLink = null, bool? currentlyPlaying = null, DateTimeOffset? lastPlayedTime = null)
     {
-        return lastPlayedUnixTimestamp == null
-            ? new Song(songName, artist)
-            : new RecentSong(songName, artist, lastPlayedUnixTimestamp.Value, currentlyPlaying);
+        return lastPlayedTime == null && currentlyPlaying == false
+            ? new Song(songName, artist, songLink)
+            : new RecentSong(songName, artist, songLink, currentlyPlaying, lastPlayedTime);
     }
 }

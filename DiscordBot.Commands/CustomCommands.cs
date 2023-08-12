@@ -6,6 +6,8 @@ namespace DiscordBot.Commands
 {
     public class CustomCommands : ModuleBase<ICommandContext>
     {
+        private const int MAX_COMMAND_LENGTH = 20;
+        private const int MAX_COMMAND_RESPONSE_LENGTH = 500;
         private readonly ICustomCommandHandler _customCommandHandler;
 
         public CustomCommands(ICustomCommandHandler customCommandHandler)
@@ -16,19 +18,29 @@ namespace DiscordBot.Commands
         [Command("NewCommand"), Alias("nc", "addcommand", "ac"), RequireUserPermission(GuildPermission.ManageMessages)]
         public async Task NewCommand(string command, [Remainder]string response)
         {
+            command = command.ToLower();
+
             if (string.IsNullOrEmpty(command) || string.IsNullOrEmpty(response))
             {
                 await Context.Channel.SendMessageAsync("Command response can't be empty you big dummy.");
                 return;
             }
-            else if (_customCommandHandler.IsReserved(command))
+            
+            if (_customCommandHandler.IsReserved(command))
             {
                 await Context.Channel.SendMessageAsync("That command is already in use by the bot. Pick a different one.");
                 return;
             }
-            else if (_customCommandHandler.HasCommand(command))
+            
+            if (_customCommandHandler.HasCommand(command))
             {
                 await Context.Channel.SendMessageAsync("That custom command already exists. If you want to replace it, delete the old command first.");
+                return;
+            }
+
+            if (command.Length > MAX_COMMAND_LENGTH || response.Length > MAX_COMMAND_RESPONSE_LENGTH)
+            {
+                await Context.Channel.SendMessageAsync($"Command must be {MAX_COMMAND_LENGTH} characters or less, and the response must be {MAX_COMMAND_RESPONSE_LENGTH} or less.");
                 return;
             }
 
