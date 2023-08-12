@@ -22,15 +22,8 @@ public class LastFmCommandRunner
 
     public async Task GetLastSongsForUser(IInteractionContext context, string lastFmUsername, int count)
     {
-        try
-        {
-            var songs = await _lastFmService.GetRecentSongsForUser(lastFmUsername, count);
-            var userImg = context.User.GetAvatarUrl() ?? context.User.GetDefaultAvatarUrl();
-            await context.Interaction.RespondAsync(embed: songs.BuildRecentlyPlayed(context.User.Username, userImg, lastFmUsername));
-        }
-        catch (Exception e)
-        {
-            await context.Interaction.RespondAsync(await Error.WriteError($"Couldn't get user info.", e));
-        }
+        var songs = await _lastFmService.GetRecentSongsForUser(lastFmUsername, count);
+        var userImg = context.User.GetAvatarUrl() ?? context.User.GetDefaultAvatarUrl();
+        await context.Interaction.RespondAsync(embed: songs.BuildRecentlyPlayed(context.User.Username, userImg, lastFmUsername));
     }
 }

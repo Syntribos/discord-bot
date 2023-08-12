@@ -22,6 +22,8 @@ public class LastFmCommands : InteractionModuleBase<SocketInteractionContext>
     [SlashCommand("lastplayed", "Gets the last scrobbled for a user")]
     public async Task GetLastScrobbledForUser(string lastFmUsername, int count = 10)
     {
-        await _lastFmCommandRunner.GetLastSongsForUser(Context, lastFmUsername, count);
+        await Context.Safely(
+            () => _lastFmCommandRunner.GetLastSongsForUser(Context, lastFmUsername, count),
+            "Couldn't get info for user.");
     }
 }
