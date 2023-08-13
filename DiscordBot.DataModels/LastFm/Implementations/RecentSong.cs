@@ -21,6 +21,12 @@ public class RecentSong : ISong
 
     public DateTimeOffset? LastPlayDateTime { get; }
 
+    public string LastPlayedRelativeTimestamp => CurrentlyPlaying
+        ? "Now playing"
+        : LastPlayDateTime is not null
+            ? $" - <t:{LastPlayDateTime?.ToUnixTimeSeconds()}:R>"
+            : string.Empty;
+
     public string GetLinkedName()
     {
         return _songLink != null ? $"[{Name}]({_songLink})" : Name;

@@ -12,6 +12,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\DiscordBot.DataModels\DiscordBot.DataModels.csproj" />
+      <ProjectReference Include="..\DiscordBot.Utilities\DiscordBot.Utilities.csproj" />
     </ItemGroup>
 
 </Project>
